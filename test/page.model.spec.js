@@ -55,9 +55,8 @@ describe('Testing Page Models', function() {
   });
 
   describe('Instance Methods', function() {
-    var pagesToTest;
 
-    before(function() {
+    before(function(done) {
          Page.bulkCreate([{
                 title: 'base',
                 content: 'this is just a test',
@@ -73,15 +72,19 @@ describe('Testing Page Models', function() {
             }], {
                 validate: true,
                 individualHooks: true
-            }).then(function() {
-              return Page.findAll();
-            }).then(function(pages) {
-              pagesToTest = pages;
             });
+            done();
     });
-    it('finds similar files based on shared tags', function() {
+
+    it('finds similar files based on shared tags', function(done) {
         //use findSimilar on a page example
-        console.log("TEST",pagesToTest);
+        Page.findByTag('bar')
+            .then(function(pages) {
+              expect(pages).to.have.lengthOf(3);
+              done();
+            })
+            .catch(done);
+
     })
 });
 
